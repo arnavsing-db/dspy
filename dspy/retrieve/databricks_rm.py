@@ -117,8 +117,11 @@ class DatabricksRM(dspy.Retrieve):
         results = response.json()
 
         docs = defaultdict(float)
+        doc_ids = []
         text, score = None, None
         for data_row in results["result"]["data_array"]:
+            metadata = json.loads(data_row[1])
+            doc_ids.append(metadata['document_id'])
             for col, val in zip(results["manifest"]["columns"], data_row):
                 if col["name"] == 'text':
                     text = val
@@ -127,4 +130,4 @@ class DatabricksRM(dspy.Retrieve):
             docs[text] += score
 
         sorted_docs = sorted(docs.items(), key=lambda x: x[1], reverse=True)[:self.k]
-        return Prediction(docs=[doc for doc, _ in sorted_docs])
+        return Prediction(docs=[doc for doc, _ in sorted_docs], doc_ids=doc_ids)
