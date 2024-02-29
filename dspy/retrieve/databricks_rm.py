@@ -123,11 +123,10 @@ class DatabricksRM(dspy.Retrieve):
         docs = defaultdict(float)
         doc_ids = []
         text, score = None, None
-        print(results)
         for data_row in results["result"]["data_array"]:
             for col, val in zip(results["manifest"]["columns"], data_row):
                 if col["name"] == self.docs_id_column_name:
-                    doc_ids.append(val)
+                    doc_ids.append(val["document_id"])
                 if col["name"] == self.text_column_name:
                     text = val
                 if col["name"] == 'score':
