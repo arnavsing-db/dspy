@@ -16,6 +16,8 @@ class DatabricksRM(dspy.Retrieve):
         columns (list[str]): Column names to include in response
         filters_json (str, optional): JSON string for query filters
         k (int, optional): Number of top embeddings to retrieve. Defaults to 3.
+        docs_id_column_name (str, optional): Column name for retrieved doc_ids to return.
+        text_column_name (str, optional): Column name for retrieved text to return.
 
     Examples:
         Below is a code snippet that shows how to configure Databricks Vector Search endpoints:
@@ -62,7 +64,7 @@ class DatabricksRM(dspy.Retrieve):
         self.retrieve = DatabricksRM(query=[1, 2, 3], query_type = 'vector')
         ```
     """
-    def __init__(self, databricks_index_name = None, databricks_endpoint = None, databricks_token = None, columns = None, filters_json = None, k = 3):
+    def __init__(self, databricks_index_name = None, databricks_endpoint = None, databricks_token = None, columns = None, filters_json = None, k = 3, docs_id_column_name='id', text_column_name='text'):
         super().__init__(k=k)
         if not databricks_token and not os.environ.get("DATABRICKS_TOKEN"):
             raise ValueError("You must supply databricks_token or set environment variable DATABRICKS_TOKEN")
@@ -78,6 +80,8 @@ class DatabricksRM(dspy.Retrieve):
         self.columns = columns
         self.filters_json = filters_json
         self.k = k
+        self.docs_id_column_name = docs_id_column_name
+        self.text_column_name = text_column_name
 
     def forward(self, query: Union[str, List[float]], query_type: str = 'vector') -> dspy.Prediction:
         """Search with Databricks Vector Search Client for self.k top results for query
@@ -119,11 +123,12 @@ class DatabricksRM(dspy.Retrieve):
         docs = defaultdict(float)
         doc_ids = []
         text, score = None, None
+        print(results)
         for data_row in results["result"]["data_array"]:
             for col, val in zip(results["manifest"]["columns"], data_row):
-                if col["name"] == 'id':
+                if col["name"] == self.docs_id_column_name:
                     doc_ids.append(val)
-                if col["name"] == 'text':
+                if col["name"] == self.text_column_name:
                     text = val
                 if col["name"] == 'score':
                     score = val
