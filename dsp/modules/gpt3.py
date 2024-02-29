@@ -142,7 +142,7 @@ class GPT3(LM):
     @backoff.on_exception(
         backoff.expo,
         ERRORS,
-        max_time=1000,
+        max_time=120,
         on_backoff=backoff_hdlr,
     )
     def request(self, prompt: str, **kwargs):
