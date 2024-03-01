@@ -1,11 +1,11 @@
 import logging
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(message)s",
-    handlers=[logging.FileHandler("azure_openai_usage.log")],
-)
+# # Configure logging
+# logging.basicConfig(
+#     level=logging.INFO,
+#     format="%(message)s",
+#     handlers=[logging.FileHandler("azure_openai_usage.log")],
+# )
 
 import functools
 import json
