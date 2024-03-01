@@ -127,8 +127,11 @@ class DatabricksRM(dspy.Retrieve):
         for data_row in results["result"]["data_array"]:
             for col, val in zip(results["manifest"]["columns"], data_row):
                 if col["name"] == self.docs_id_column_name:
-                    docs_dict = json.loads(val)
-                    doc_ids.append(str(docs_dict["document_id"]))
+                    if self.docs_id_column_name == 'metadata':
+                        docs_dict = json.loads(val)
+                        doc_ids.append(str(docs_dict["document_id"]))
+                    else:
+                        doc_ids.append(str(val))
                 if col["name"] == self.text_column_name:
                     text = val
                 if col["name"] == 'score':
