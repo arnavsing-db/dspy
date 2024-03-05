@@ -25,7 +25,7 @@ def setup_logger():
     return logger
 
 
-logger = setup_logger()
+#logger = setup_logger()
 
 
 def _build_error_msg(feedback_msgs):
