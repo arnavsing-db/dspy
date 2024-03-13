@@ -74,7 +74,7 @@ class Cupid(LM):
             }
             self.history.append(history)
 
-            return response_text
+            return [response_text]
 
     def request(self, prompt: str, **kwargs):
         return self.basic_request(prompt, **kwargs)
