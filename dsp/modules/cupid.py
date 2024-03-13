@@ -3,9 +3,10 @@ import os
 import requests
 from dsp.modules.cache_utils import CacheMemory, NotebookCacheMemory, cache_turn_on
 import time
+from dsp.modules.lm import LM
 
-class Cupid():
-    def __init__(self, url="http://cupid-mpt2-trtllm-dzrasi.inf.hosted-on.mosaicml.hosting", api_key: Optional[str] = None, tokenizer = None, retries_left: int = 0, **kwargs):
+class Cupid(LM):
+    def __init__(self, url=None, api_key: Optional[str] = None, tokenizer = None, retries_left: int = 0, **kwargs):
         self.url = url
         self.headers = {"Authorization": api_key, "Content-Type": "application/json"}
         self.tokenizer = tokenizer
