@@ -258,9 +258,9 @@ class COPRO(Teleprompter):
                 # Generate next batch of potential prompts to optimize, with previous attempts as input
                 if self.prompt_model: 
                     with dspy.settings.context(lm=self.prompt_model):
-                        instr = dspy.Predict(GenerateInstructionGivenAttempts, n=self.breadth, temperature=self.init_temperature)(attempted_instructions=attempts)
+                        instr = dspy.Predict(GenerateInstructionGivenAttempts, n=self.breadth-1, temperature=self.init_temperature)(attempted_instructions=attempts)
                 else:
-                    instr = dspy.Predict(GenerateInstructionGivenAttempts, n=self.breadth, temperature=self.init_temperature)(attempted_instructions=attempts)
+                    instr = dspy.Predict(GenerateInstructionGivenAttempts, n=self.breadth-1, temperature=self.init_temperature)(attempted_instructions=attempts)
 
                 if self.verbose and self.prompt_model: print(f"{self.prompt_model.inspect_history(n=1)}")
                 # Get candidates for each predictor
