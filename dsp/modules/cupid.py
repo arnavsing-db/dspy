@@ -5,8 +5,9 @@ from dsp.modules.cache_utils import CacheMemory, NotebookCacheMemory, cache_turn
 import time
 from dsp.modules.lm import LM
 
+
 class Cupid(LM):
-    def __init__(self, url=None, api_key: Optional[str] = None, tokenizer = None, retries_left: int = 0, **kwargs):
+    def __init__(self, url="http://cupid-mpt2-trtllm-dzrasi.inf.hosted-on.mosaicml.hosting", api_key: Optional[str] = None, tokenizer = None, retries_left: int = 0, **kwargs):
         self.url = url
         self.headers = {"Authorization": api_key, "Content-Type": "application/json"}
         self.tokenizer = tokenizer
@@ -29,7 +30,7 @@ class Cupid(LM):
         w_temp = self.tokenizer.apply_chat_template([{"role": "system", "content": "You are a helpful assistant. The date is Feb 23, 2024. Your knowledge cuts off as of 12/31/2023."}, {"role": "user", "content": prompt}], tokenize=False, add_generation_prompt=True, stop="<|im_end|>")
         return w_temp
 
-    def _generate(self, prompt, **kwargs):
+    def basic_request(self, prompt, **kwargs):
         kwargs = {**self.kwargs, **kwargs}
         formatted_prompt = self._format_prompt(prompt)
         data = {
@@ -65,9 +66,12 @@ class Cupid(LM):
             response_text = completions[0]["text"].strip()  # Assuming you want the first completion's text
             response_usage = json_response["usage"]  # Assuming 'usage' is directly under the response
             return response_text
+
+    def request(self, prompt: str, **kwargs):
+        return self.basic_request(prompt, **kwargs)
         
     def __call__(self, prompt: str, **kwargs):
-        return self._generate(prompt, **kwargs)
+        return self.request(prompt, **kwargs)
 
 
 @CacheMemory.cache
