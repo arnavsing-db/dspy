@@ -7,8 +7,10 @@ from dsp.modules.lm import LM
 
 
 class Cupid(LM):
-    def __init__(self, url="http://cupid-mpt2-trtllm-dzrasi.inf.hosted-on.mosaicml.hosting", api_key: Optional[str] = None, tokenizer = None, retries_left: int = 0, **kwargs):
+    def __init__(self, url= None, api_key: Optional[str] = None, tokenizer = None, retries_left: int = 0, **kwargs):
         self.url = url
+        self.provider = "databricks"
+        self.history: list[dict[str, Any]] = []
         self.headers = {"Authorization": api_key, "Content-Type": "application/json"}
         self.tokenizer = tokenizer
         self.retries_left = retries_left
@@ -50,7 +52,7 @@ class Cupid(LM):
             if kwargs["retries_left"] > 0:
                 print("Retrying...")
                 time.sleep(5 * (6 - kwargs["retries_left"]))  # Exponential backoff
-                return self._generate(
+                return self.basic_request(
                     formatted_prompt,
                     temperature=kwargs["temperature"],
                     max_tokens=kwargs["max_tokens"],
@@ -65,6 +67,13 @@ class Cupid(LM):
             completions = json_response["choices"]
             response_text = completions[0]["text"].strip()  # Assuming you want the first completion's text
             response_usage = json_response["usage"]  # Assuming 'usage' is directly under the response
+            history = {
+                "prompt": prompt,
+                "response": response_text,
+                "kwargs": kwargs,
+            }
+            self.history.append(history)
+
             return response_text
 
     def request(self, prompt: str, **kwargs):
