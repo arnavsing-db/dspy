@@ -80,8 +80,11 @@ class LM(ABC):
                 text = choices[0].text
             elif provider == "openai" or provider == "ollama":
                 text = ' ' + self._get_choice_text(choices[0]).strip()
-            elif provider == "clarifai" or provider == "databricks":
+            elif provider == "clarifai":
                 text=choices
+            elif provider == "databricks":
+                choices = [choices]
+                text = choices[0]
             else:
                 text = choices[0]["text"]
             self.print_green(text, end="")
