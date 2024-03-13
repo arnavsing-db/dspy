@@ -46,7 +46,7 @@ class LM(ABC):
 
             if prompt != last_prompt:
 
-                if provider=="clarifai":
+                if provider=="clarifai" or provider=="databricks":
                     printed.append(
                         (
                             prompt,
@@ -80,7 +80,7 @@ class LM(ABC):
                 text = choices[0].text
             elif provider == "openai" or provider == "ollama":
                 text = ' ' + self._get_choice_text(choices[0]).strip()
-            elif provider == "clarifai":
+            elif provider == "clarifai" or provider == "databricks":
                 text=choices
             else:
                 text = choices[0]["text"]
