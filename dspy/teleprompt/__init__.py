@@ -2,6 +2,7 @@ from .teleprompt import *
 from .bootstrap import *
 from .vanilla import *
 from .ensemble import *
+from .copro_optimizer import COPRO
 from .random_search import *
 from .finetune import *
 from .teleprompt_optuna import *
