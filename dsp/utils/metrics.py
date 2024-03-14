@@ -48,9 +48,15 @@ def normalize_text(s):
 
     return white_space_fix(remove_articles(remove_punc(lower(s))))
 
+def em_score(prediction, ground_truths):
+    cleaned_final_answer = normalize_text(prediction)
+    if not isinstance(ground_truths, (list, tuple)):
+        ground_truths = [ground_truths]
+    cleaned_sample_labels = {normalize_text(gt) for gt in ground_truths}
+    return any(cleaned_final_answer.startswith(label) for label in cleaned_sample_labels)
 
-def em_score(prediction, ground_truth):
-    return normalize_text(prediction) == normalize_text(ground_truth)
+# def em_score(prediction, ground_truth):
+#     return normalize_text(prediction) == normalize_text(ground_truth)
 
 
 # See: https://github.com/hotpotqa/hotpot/blob/master/hotpot_evaluate_v1.py
