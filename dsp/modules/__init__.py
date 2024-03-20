@@ -13,6 +13,7 @@ from .clarifai import *
 from .bedrock import *
 from .google import *
 from .cupid import *
+from .databricks_mlflow import Databricks_MLFlow
 
 
 from .hf_client import HFClientTGI
