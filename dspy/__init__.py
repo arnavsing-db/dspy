@@ -25,6 +25,7 @@ Pyserini = dsp.PyseriniRetriever
 Clarifai = dsp.ClarifaiLLM
 Google = dsp.Google
 Cupid = dsp.Cupid
+Databricks_MLFlow = dsp.Databricks_MLFlow
 
 HFClientTGI = dsp.HFClientTGI
 HFClientVLLM = HFClientVLLM
